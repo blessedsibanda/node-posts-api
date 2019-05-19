@@ -1,0 +1,21 @@
+{
+  "name": "blogplatform",
+  "version": "1.0.0",
+  "description": "A Blog platform REST API using Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "mongoose",
+    "express.js"
+  ],
+  "author": "Blessed Sibanda",
+  "license": "ISC",
+  "dependencies": {
+    "consign": "^0.1.6",
+    "express": "^4.17.0",
+    "mongoose": "^5.5.9"
+  }
+}
