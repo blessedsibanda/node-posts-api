@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test npx mocha test/**/*.js"
   },
   "keywords": [
     "node.js",
@@ -15,16 +15,23 @@
   "author": "Blessed Sibanda",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "consign": "^0.1.6",
     "express": "^4.17.0",
+    "jwt-simple": "^0.5.6",
     "mongoose": "^5.5.9",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.4",
-    "@babel/register": "^7.4.4"
+    "@babel/register": "^7.4.4",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "supertest": "^4.0.2"
   }
 }

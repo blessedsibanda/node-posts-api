@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
+import config from '../config/config';
 
-const dbURI = 'mongodb://localhost:27017/node_blog_api'
-mongoose.connect(dbURI)
+const dbURI = process.env.NODE_ENV === 'test' ? config.testDBURI : config.dbURI;
+
+mongoose.connect(dbURI,{ useNewUrlParser: true });
 
 mongoose.connection.on('connected', function () {
     console.log('Mongoose connected to ' + dbURI);

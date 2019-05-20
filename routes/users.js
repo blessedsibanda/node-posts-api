@@ -2,7 +2,7 @@ import express from 'express'
 
 import User from '../models/User'
 
-const router = express.Router()
+const router = express.Router();
 
 router.post('/', (req, res) => {
     User.create(req.body, (err, user) => {
@@ -16,6 +16,6 @@ router.post('/', (req, res) => {
             user
         })
     })
-})
+});
 
 export default router;

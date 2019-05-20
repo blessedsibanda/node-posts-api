@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export default modifiedOn = (schema, options ) => {
+const modifiedOn = (schema, options ) => {
     schema.add({ modifiedOn: Date }),
     
     schema.pre('save', next => {
@@ -8,3 +8,5 @@ export default modifiedOn = (schema, options ) => {
         next();
     })
 }
+
+export default modifiedOn
