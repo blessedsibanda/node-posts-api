@@ -18,4 +18,9 @@ router.post('/', (req, res) => {
     })
 });
 
+router.post('/token', (req, res) => {
+    const { email, password } = req.body;
+    User.find
+});
+
 export default router;
