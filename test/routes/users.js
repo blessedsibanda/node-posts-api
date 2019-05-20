@@ -1,10 +1,12 @@
 import User from '../../models/User'
+import { request } from 'https';
 
 
 describe('Routes: Users', () => {
 
     // clear the database
     beforeEach((done) => {
+        console.log('clear database')
         User.deleteMany({}, (err) => {
             if (err) { console.log(err); }
         });
@@ -45,18 +47,18 @@ describe('Routes: Users', () => {
     });
 
     describe('POST /users with already existing email', () => {
-        it('returns a mongo duplicate key error', (done) => {
+        it('returns a mongodb duplicate key error', (done) => {
             User.create({
-                name: "John",
+                name: "testname",
                 email: "john@example.com",
-                password: "12345",
+                password: "somepassword",
             }, err => {
                if (err) { console.log(err); }
             });
             request.post("/users")
                 .send({
                     name: "John",
-                    email: "john@example.com",
+                    email: "john@example.com",   // same email
                     password: "12345"
                 })
                 .expect(200)
@@ -67,4 +69,27 @@ describe('Routes: Users', () => {
                 })
         });
     });
+
+    // describe('POST /users/token with correct credentials', () => {
+    //   it('returns an json web token', done => {
+    //     User.create({
+    //         name: "john",
+    //         email: "john@example.com",
+    //         password: "12345",
+    //     }, err => {
+    //        if (err) { console.log(err); }
+    //     });
+    //     request.post("/users/token")
+    //         .send({
+    //             email: "john@example.com", 
+    //             password: "12345"
+    //         })
+    //         .expect(200)
+    //         .end((err, res) => {
+    //             expect(res.body.token).to.exist;
+    //             done(err);
+    //         })
+    //   })
+    // })
+    
   });

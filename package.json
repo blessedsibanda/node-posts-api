@@ -1,7 +1,7 @@
 {
-  "name": "blogplatform",
+  "name": "socialsite",
   "version": "1.0.0",
-  "description": "A Blog platform REST API using Node.js",
+  "description": "A social app REST API using Node.js",
   "main": "app.js",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",

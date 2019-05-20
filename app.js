@@ -6,6 +6,7 @@ import usersRouter from './routes/users'
 import postsRouter from './routes/posts'
 
 import './models/db'
+import './auth'
 
 const app = express();
 
