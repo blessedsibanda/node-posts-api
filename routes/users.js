@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
                 error: err
             })
         }
-        return res.json({
+        return res.status(201).json({
             message: "User created successfully",
             user
         })

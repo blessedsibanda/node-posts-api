@@ -8,7 +8,7 @@ import config from '../../config/config'
 describe('Routes: posts', () => {
 
     // create user, token
-    let token;
+    let token, someUser;
     const newUser = new User({
         email: "test@example.com",
         name: "test",
@@ -17,6 +17,7 @@ describe('Routes: posts', () => {
     newUser.save((err, user) => {
         if (err) { console.log(err); }
         token = jwt.encode({ id: user._id }, config.jwtSecret )
+        someUser = user;
     })
 
     // clean database
@@ -35,7 +36,7 @@ describe('Routes: posts', () => {
     });
 
     describe('POST /posts - with authenticated user', () => {
-      it('creates a new post', done => {
+      it('creates a new post and return it', done => {
         request.post("/posts")
           .set("Authorization", `Bearer ${token}`)
           .send({
@@ -53,7 +54,7 @@ describe('Routes: posts', () => {
       })
     })
 
-    describe('POST /posts - without authentication', () => {
+    describe('POST /posts - with wrong auth token', () => {
         it('does not create post', done => {
           token = 'some.wrong.token'
           request.post("/posts")
@@ -67,6 +68,27 @@ describe('Routes: posts', () => {
               done(err);
            })
         })
+    })
+
+    describe('GET /posts', () => {
+      it('returns a list of all posts', done => {
+        // create some posts 
+        const post1 = new Post({ title: 'title 1', body: 'body 1'})
+        post1.createdBy = someUser
+        post1.save().then(console.log('post created'))
+
+        const post2 = new Post({ title: 'title 2', body: 'body 2'})
+        post2.createdBy = someUser
+        post2.save().then(console.log('post created'))
+
+        request.get("/posts")
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.posts).to.exist;
+            expect(res.body.posts.length).to.eql(2);
+            done(err);
+        })
       })
+    })
     
 })

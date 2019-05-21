@@ -5,7 +5,6 @@ describe('Routes: users', () => {
 
     // clean database
     beforeEach((done) => {
-        // console.log('clean database')
         User.deleteMany({}, (err) => {
             if (err) { console.log(err); }
         });
@@ -13,7 +12,6 @@ describe('Routes: users', () => {
     });
 
     afterEach((done) => {
-        // console.log('clean database')
         User.deleteMany({}, (err) => {
             if (err) { console.log(err); }
         });
@@ -28,7 +26,7 @@ describe('Routes: users', () => {
                   email: "john@example.com",
                   password: "12345"
               })
-              .expect(200)
+              .expect(201)
               .end((err, res) => {
                   expect(res.body.user.name).to.eql("John");
                   expect(res.body.user.email).to.eql("john@example.com");
