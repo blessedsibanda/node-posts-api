@@ -111,5 +111,26 @@ describe('Routes: posts', () => {
       })
 
     })
+
+    describe('POST /posts/<post-id>/comments', () => {
+      it('creates a new comment', done => {
+        // create a new post
+        const post1 = new Post({ title: 'title 1', body: 'body 1'})
+        post1.createdBy = someUser
+        post1.save().then(console.log('post created'))
+
+        request.post(`/posts/${post1._id}/comments`)
+          .set("Authorization", `Bearer ${token}`)
+          .send({ body: "some random comment" })
+          .expect(201)
+          .end((err, res) => {
+            // expect(res.body.comments).to.exist;
+            console.log('response ', res.body)
+            expect(res.body.message).to.eql("comment created successfully");
+            expect(res.body.comments.length).to.eql(1);
+            done(err);
+          })
+      })
+    })
     
 })

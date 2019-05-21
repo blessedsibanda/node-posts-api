@@ -34,22 +34,6 @@ router.get('/:id', (req, res) => {
 })
 
 
-// get comments for a post
-router.get('/:id/comments', (req, res) => {
-    Post.findById(req.params.id, (err, post) => {
-        if (err) {
-            return res.json({
-                error: err
-            })
-        }
-        if (post) {
-            return res.json({
-                comments: post.comments
-            })
-        }
-    })
-})
-
 // create a comment for a post
 router.post('/:id/comments', passport.authenticate('jwt', { session: false}),
     (req, res) => {
@@ -60,9 +44,11 @@ router.post('/:id/comments', passport.authenticate('jwt', { session: false}),
                 })
             }
             if (post) {
-                const newComment = new Comment(req.body)
-                newComment.createdBy = req.user;
-                post.comments.push(req.body);
+                post.comments.push({
+                    body: req.body.body,
+                    createdBy: req.user,
+                })
+                console.log('post comments --> ', post.comments)
                 post.save((err, updatedPost) => {
                     if (err) {
                         return res.json({
@@ -74,7 +60,6 @@ router.post('/:id/comments', passport.authenticate('jwt', { session: false}),
                         comments: updatedPost.comments
                     })
                 })
-            
             }
         })
 })
@@ -82,7 +67,6 @@ router.post('/:id/comments', passport.authenticate('jwt', { session: false}),
 router.put('/:id', passport.authenticate('jwt', { session: false}),
     (req, res) => {
         const { title, body } = req.body;
-      
         Post.findById(req.params.id, (err, post) => {
             if (err) {
                 return res.json({
