@@ -1,10 +1,19 @@
 import User from '../../models/User'
 
 
-describe('Routes: Users', () => {
+describe('Routes: users', () => {
 
     // clean database
     beforeEach((done) => {
+        // console.log('clean database')
+        User.deleteMany({}, (err) => {
+            if (err) { console.log(err); }
+        });
+        done()
+    });
+
+    afterEach((done) => {
+        // console.log('clean database')
         User.deleteMany({}, (err) => {
             if (err) { console.log(err); }
         });

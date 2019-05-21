@@ -1,12 +1,8 @@
-import mongoose from 'mongoose'
-
-const modifiedOn = (schema, options ) => {
+module.exports = exports = function modifiedOn (schema, options) {
     schema.add({ modifiedOn: Date });
-
-    schema.pre('save', next => {
+    schema.pre('save', function (next) {
         this.modifiedOn = Date.now();
         next();
-    })
+    });
 };
 
-export default modifiedOn

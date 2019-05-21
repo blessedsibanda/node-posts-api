@@ -26,12 +26,3 @@ const strategy = new Strategy(params, (payload, done) => {
 });
 passport.use(strategy);
 
-/*
-
-return {
-    initialize: () => {
-        return passport.authenticate("jwt", config.jwtSession);
-    }
-}
-
-*/

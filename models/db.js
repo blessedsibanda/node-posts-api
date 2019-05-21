@@ -3,7 +3,10 @@ import config from '../config/config';
 
 const dbURI = process.env.NODE_ENV === 'test' ? config.testDBURI : config.dbURI;
 
-mongoose.connect(dbURI,{ useNewUrlParser: true });
+mongoose.connect(dbURI,{ 
+    useNewUrlParser: true, 
+    useCreateIndex: true
+});
 
 mongoose.connection.on('connected', function () {
     console.log('Mongoose connected to ' + dbURI);

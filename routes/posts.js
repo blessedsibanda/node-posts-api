@@ -1,21 +1,26 @@
-import express from 'express'
+import express from 'express';
+import passport from 'passport';
 
-import Post from '../models/Post'
+
+import Post from '../models/Post';
 
 const router = express.Router()
 
-router.post('/', (req, res) => {
-    Post.create(req.body, (err, post) => {
-        if (err) {
-            return res.json({
-                error: err
+router.post('/', passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        const newPost = new Post(req.body)
+        newPost.createdBy = req.user
+        newPost.save((err, post) => {
+            if (err) {
+                return res.json({
+                    error: err
+                })
+            } 
+            return res.status(201).json({
+                message: "Post created successfully",
+                post
             })
-        }
-        return res.json({
-            message: "Post created successfully",
-            post
         })
-    })
 })
 
 export default router;
