@@ -89,6 +89,27 @@ describe('Routes: posts', () => {
             done(err);
         })
       })
+
+      it('returns a single post - when valid id is provided', done => {
+        // create some posts 
+        const post1 = new Post({ title: 'title 1', body: 'body 1'})
+        post1.createdBy = someUser
+        post1.save().then(console.log('post created'))
+
+        const post2 = new Post({ title: 'title 2', body: 'body 2'})
+        post2.createdBy = someUser
+        post2.save().then(console.log('post created'))
+
+        request.get(`/posts/${post1._id}`)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.post).to.exist;
+            expect(res.body.post.title).to.eql(post1.title);
+            expect(res.body.post.body).to.eql(post1.body);
+            done(err);
+        })
+      })
+
     })
     
 })

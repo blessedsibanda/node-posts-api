@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import commentSchema from './Comment'
+import { commentSchema } from './Comment'
 import creationInfo from './plugins/creationInfo'
 import modifiedOn from './plugins/modifiedOn'
 

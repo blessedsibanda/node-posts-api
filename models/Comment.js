@@ -1,15 +1,21 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 import creationInfo from './plugins/creationInfo'
 import modifiedOn from './plugins/modifiedOn'
 
-const commentSchema = mongoose.Schema({
+
+let commentSchema = new Schema()
+commentSchema.add({
     body: { type: String, required: true },
-    postId: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},
 })
 
 commentSchema.plugin(creationInfo);
 commentSchema.plugin(modifiedOn)
 
-export default commentSchema;
 
+const Comment = model('Comment', commentSchema);
+
+module.exports = {
+    Comment,
+    commentSchema
+}
