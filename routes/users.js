@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/', passport.authenticate('jwt',{ session: false }),
     (req, res) => {
         return res.json({ user: req.user })
-})
+});
 
 router.post('/', (req, res) => {
     const newUser = new User(req.body);
@@ -40,8 +40,8 @@ router.post('/token', (req, res) => {
                 if (err) { console.log(err); }
                 if(isMatch) {
                     // Passwords match
-                    const payload = { id: user._id }
-                    res.json({
+                    const payload = { id: user._id };
+                    return res.json({
                         token: jwt.encode(payload, config.jwtSecret)
                     })
                 } else {

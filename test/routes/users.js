@@ -1,12 +1,10 @@
 import User from '../../models/User'
-import { request } from 'https';
 
 
 describe('Routes: Users', () => {
 
-    // clear the database
+    // clean database
     beforeEach((done) => {
-        console.log('clear database')
         User.deleteMany({}, (err) => {
             if (err) { console.log(err); }
         });
@@ -70,26 +68,52 @@ describe('Routes: Users', () => {
         });
     });
 
-    // describe('POST /users/token with correct credentials', () => {
-    //   it('returns an json web token', done => {
-    //     User.create({
-    //         name: "john",
-    //         email: "john@example.com",
-    //         password: "12345",
-    //     }, err => {
-    //        if (err) { console.log(err); }
-    //     });
-    //     request.post("/users/token")
-    //         .send({
-    //             email: "john@example.com", 
-    //             password: "12345"
-    //         })
-    //         .expect(200)
-    //         .end((err, res) => {
-    //             expect(res.body.token).to.exist;
-    //             done(err);
-    //         })
-    //   })
-    // })
+    describe('POST /users/token with correct credentials', () => {
+        it('returns an json web token', done => {
+            request.post("/users")
+                  .send({
+                      name: "John",
+                      email: "john@example.com",
+                      password: "12345"
+                  })
+                  .expect(200)
+                  .end(() => {
+                    request.post("/users/token")
+                        .send({
+                            email: "john@example.com",
+                            password: "12345"
+                        })
+                        .expect(200)
+                        .end((err, res) => {
+                            expect(res.body.token).to.exist;
+                            done(err);
+                        })
+                  })
+          })
+    })
+
+    describe('POST /users/token with wrong credentials', () => {
+        it('does not return a token', done => {
+            request.post("/users")
+                  .send({
+                      name: "John",
+                      email: "john@example.com",
+                      password: "12345"
+                  })
+                  .expect(200)
+                  .end(() => {
+                    request.post("/users/token")
+                        .send({
+                            email: "john@example.com",
+                            password: "wrongpassword"
+                        })
+                        .expect(401)
+                        .end((err, res) => {
+                            expect(res.body.message).to.eql("wrong user credentials")
+                            done(err);
+                        })
+                  })
+          })
+    })
     
   });
