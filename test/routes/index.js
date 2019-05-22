@@ -4,7 +4,7 @@ describe('Routes: Index', () => {
         request.get("/")
             .expect(200)
             .end((err, res) => {
-                const expected = { message: "Welcome to the Node.js Blog API"};
+                const expected = { message: "Welcome to the Node.js social site REST API"};
                 expect(res.body).to.eql(expected);
                 done(err);
             })

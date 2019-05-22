@@ -40,6 +40,7 @@ router.post('/:id/comments',
             .catch(err => res.json({ error: err }))
 })
 
+// update a post
 router.put('/:id', 
     passport.authenticate('jwt', { session: false}),
     (req, res) => {
@@ -63,8 +64,9 @@ router.put('/:id',
                 }
             })
             .catch(err => res.json({ error: err }))
-    })
+})
 
+// delete a post
 router.delete('/:id', passport.authenticate('jwt', { session: false}),
     (req, res) => {      
         Post.findById(req.params.id)
@@ -78,8 +80,9 @@ router.delete('/:id', passport.authenticate('jwt', { session: false}),
                 }
             })
             .catch(err => res.json({ error: err }))
-    })
+})
 
+// create a new post
 router.post('/', passport.authenticate('jwt', { session: false }),
     (req, res) => {
         const newPost = new Post(req.body)
