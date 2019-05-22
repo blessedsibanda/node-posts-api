@@ -42,7 +42,7 @@ describe('Routes: users', () => {
                     name: "John",
                     password: "12345"
                 })
-                .expect(200)
+                .expect(412)
                 .end((err, res) => {
                     expect(res.body.error).to.exist;
                     expect(res.body.error._message).to.be.eql("User validation failed");
@@ -66,7 +66,7 @@ describe('Routes: users', () => {
                     email: "john@example.com",   // same email
                     password: "12345"
                 })
-                .expect(200)
+                .expect(412)
                 .end((err, res) => {
                     expect(res.body.error).to.exist;
                     expect(res.body.error.code).to.be.eql(11000);

@@ -12,6 +12,13 @@ const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use((req, res, next) => {
+    if (req.body && req.body.id) {
+        delete req.body.id;
+    }
+    next();
+});
+app.use(express.static("public"))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

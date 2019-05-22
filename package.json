@@ -4,7 +4,8 @@
   "description": "A social app REST API using Node.js",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon --exec babel-node app.js",
+    "start": "npm run apidoc && nodemon --exec babel-node app.js",
+    "apidoc": "apidoc -i routes/ -o public/apidoc",
     "test": "NODE_ENV=test npx mocha test/**/*.js"
   },
   "keywords": [
@@ -12,9 +13,16 @@
     "mongoose",
     "express.js"
   ],
+  "apidoc": {
+    "name": "Node.js Social Site API - Documentaion",
+    "template": {
+      "forceLanguage": "en"
+    }
+  },
   "author": "Blessed Sibanda",
   "license": "ISC",
   "dependencies": {
+    "apidoc": "^0.17.7",
     "bcrypt": "^3.0.6",
     "express": "^4.17.0",
     "jwt-simple": "^0.5.6",
