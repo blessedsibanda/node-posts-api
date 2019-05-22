@@ -48,7 +48,7 @@ router.post('/:id/comments', passport.authenticate('jwt', { session: false}),
                     body: req.body.body,
                     createdBy: req.user,
                 })
-                console.log('post comments --> ', post.comments)
+                
                 post.save((err, updatedPost) => {
                     if (err) {
                         return res.json({

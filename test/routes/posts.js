@@ -47,7 +47,7 @@ describe('Routes: posts', () => {
           .end((err, res) => {
             expect(res.body.message).to.eql("Post created successfully");
             expect(res.body.post.createdBy).to.exist;
-            expect(res.body.post.createdBy).to.exist;
+            expect(res.body.post.createdOn).to.exist;
             expect(res.body.post.modifiedOn).to.exist;
             done(err);
          })
@@ -56,9 +56,8 @@ describe('Routes: posts', () => {
 
     describe('POST /posts - with wrong auth token', () => {
         it('does not create post', done => {
-          token = 'some.wrong.token'
           request.post("/posts")
-            .set("Authorization", `Bearer ${token}`)
+            .set("Authorization", `Bearer some.wrong.tokne`)
             .send({
               title: "post title",
               body: "post body"
@@ -75,19 +74,24 @@ describe('Routes: posts', () => {
         // create some posts 
         const post1 = new Post({ title: 'title 1', body: 'body 1'})
         post1.createdBy = someUser
-        post1.save().then(console.log('post created'))
 
         const post2 = new Post({ title: 'title 2', body: 'body 2'})
         post2.createdBy = someUser
-        post2.save().then(console.log('post created'))
 
-        request.get("/posts")
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.posts).to.exist;
-            expect(res.body.posts.length).to.eql(2);
-            done(err);
+        let postsArray = [post1, post2]
+
+        Post.create(postsArray).then(() => {
+          request.get("/posts")
+            .expect(200)
+            .end((err, res) => {
+              expect(res.body.posts).to.exist;
+              expect(res.body.posts.length).to.eql(2);
+              done(err);
         })
+        }).catch(err => {
+          console.log('error saving posts ',err)
+        })
+
       })
 
       it('returns a single post - when valid id is provided', done => {
@@ -115,22 +119,46 @@ describe('Routes: posts', () => {
     describe('POST /posts/<post-id>/comments', () => {
       it('creates a new comment', done => {
         // create a new post
-        const post1 = new Post({ title: 'title 1', body: 'body 1'})
-        post1.createdBy = someUser
-        post1.save().then(console.log('post created'))
-
-        request.post(`/posts/${post1._id}/comments`)
-          .set("Authorization", `Bearer ${token}`)
-          .send({ body: "some random comment" })
-          .expect(201)
-          .end((err, res) => {
-            // expect(res.body.comments).to.exist;
-            console.log('response ', res.body)
-            expect(res.body.message).to.eql("comment created successfully");
-            expect(res.body.comments.length).to.eql(1);
-            done(err);
-          })
+        const post = new Post({ title: 'some title', body: 'body comment'})
+        post.createdBy = someUser
+        post.save().then(post => {
+          request.post(`/posts/${post._id}/comments`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({ body: "some random comment" })
+            .expect(201)
+            .end((err, res) => {
+              expect(res.body.message).to.eql("comment created successfully");
+              expect(res.body.comments.length).to.eql(1);
+              expect(res.body.comments[0].body).to.eql("some random comment");
+              done(err);
+            })
+        })
       })
     })
-    
+
+    describe('PUT /posts/<post-id>', () => {
+      it('should update a post', done => {
+        // create a post 
+        const post = new Post({ title: 'post title', body: 'post body'})
+        post.createdBy = someUser
+        post.save().then(post => {
+            request.put(`/posts/${post._id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+              title: "post title **updated",
+              body: "post body"
+            })
+            .expect(200)
+            .end((err, res) => {
+              expect(res.body.updatedPost).to.exist;
+              const { modifiedOn, createdOn } = res.body.updatedPost
+              expect(res.body.message).to.eql("Post updated successfully");
+              expect(res.body.updatedPost.title).to.eql("post title **updated");
+              modifiedOn.should.not.equal(createdOn)
+              done(err);
+          })
+        })
+      })
+    })
+     
 })
