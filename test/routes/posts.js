@@ -160,6 +160,20 @@ describe('Routes: posts', () => {
         })
       })
     })
+
+    describe('PUT /posts/<post-id> -- unauthenticated', () => {
+      it('returns unauthenticated', done => {
+        // create a new post
+        const post = new Post({ title: 'some title', body: 'body comment'})
+        post.createdBy = someUser
+        post.save().then(post => {
+          request.put(`/posts/${post._id}`)
+            .set("Authorization", "Bearer some.wrong.token")
+            .expect(401)
+            .end((err, res) => done(err))
+        })        
+      })
+    })
      
     describe('DELETE /posts/<post-id> -- owner of post', () => {
       it('deletes a post', done => {
@@ -200,7 +214,6 @@ describe('Routes: posts', () => {
             .set("Authorization", `Bearer ${nonOwnerToken}`)
             .expect(200)
             .end((err, res) => {
-              console.log(res.body)
               expect(res.body.error).to.exist;
               expect(res.body.error).to.eql("only owner of post can remove it")
               done(err)
