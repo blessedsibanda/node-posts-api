@@ -10,10 +10,7 @@ const params = {
 };
 
 const strategy = new Strategy(params, (payload, done) => {    
-    User.findById(payload.id, (err, user) => {
-        if (err) {
-            return done(err, null);
-        }
+    User.findById(payload.id).then(user => {
         if (user) {
             return done(null, {
                 _id: user._id,
@@ -22,6 +19,8 @@ const strategy = new Strategy(params, (payload, done) => {
             })
         }
         return done(null, false)
+    }).catch(err => {
+        return done(err, null);
     })
 });
 passport.use(strategy);

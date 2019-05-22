@@ -161,4 +161,51 @@ describe('Routes: posts', () => {
       })
     })
      
+    describe('DELETE /posts/<post-id> -- owner of post', () => {
+      it('deletes a post', done => {
+        // create a new post
+        const post = new Post({ title: 'some title', body: 'body comment'})
+        post.createdBy = someUser
+        post.save().then(post => {
+          request.delete(`/posts/${post._id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(204)
+            .end((err, res) => done(err))
+        })        
+      })
+    })
+    
+    describe('DELETE /posts/<post-id> -- non owner of post', () => {
+      it('does not remove a post', done => {
+        // create a new post
+        const post = new Post({ title: 'some title', body: 'body comment'})
+        post.createdBy = someUser
+
+        const testUser = new User({
+          email: "johndoe@example.com",
+          name: "john doe",
+          password: "password"
+        });
+
+        let nonOwnerToken;
+
+        // create a new user and token
+        testUser.save((err, user) => {
+          if (err) { console.log(err); }
+          nonOwnerToken = jwt.encode({ id: user._id }, config.jwtSecret )
+        })
+
+        post.save().then(post => {
+          request.delete(`/posts/${post._id}`)
+            .set("Authorization", `Bearer ${nonOwnerToken}`)
+            .expect(200)
+            .end((err, res) => {
+              console.log(res.body)
+              expect(res.body.error).to.exist;
+              expect(res.body.error).to.eql("only owner of post can remove it")
+              done(err)
+            })
+        })        
+      })
+    })
 })
